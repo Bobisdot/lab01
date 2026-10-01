@@ -6,7 +6,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component("email")
-//@Primary
+@Primary //<---- look i disabled
 @Order(2)
 public class EmailNotifier implements Notifier {
 
