@@ -13,9 +13,8 @@ public class CatalogService {
 
     @Autowired
     @Lazy
-    private CatalogService self;
+    private CatalogService self; // Self-invocation мәселесін шешу үшін
 
-    // findById әдісіне @Audited КӨРСЕТІЛМЕЙДІ (AuditAspect іске қосылмайтынын тексеру үшін)
     public String findById(long id) {
         sleep(50);
         return "Item no. " + id;
@@ -37,7 +36,9 @@ public class CatalogService {
         return "Removed item no. " + id;
     }
 
+    // Task 4.3: Self-invocation
     public String removeTwice(long id) {
+        // self арқылы шақыру Proxy арқылы өтеді
         String first = self.remove(id);
         String second = self.remove(id + 1);
         return first + "; " + second;

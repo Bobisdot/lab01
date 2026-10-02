@@ -1,0 +1,18 @@
+server:
+  port: 8081
+
+app:
+  owner: Amanzhol Bekbosyn
+  group: IS-2405
+  mail:
+    from: no-reply@iitu.kz
+    retry-count: 1
+    timeout: 5s
+    enabled: false
+  ui:
+    theme: DARK
+    items-per-page: 20
+
+logging:
+  level:
+    kz.iitu: DEBUG

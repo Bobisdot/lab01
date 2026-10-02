@@ -32,7 +32,7 @@ public class CatalogController {
         return catalogService.remove(id);
     }
 
-    // Task 4.1: Proxy туралы ақпарат беретін endpoint
+    // Task 4.1: Proxy ақпараты
     @GetMapping("/proxy")
     public Map<String, String> proxyInfo() {
         return Map.of(
@@ -43,7 +43,7 @@ public class CatalogController {
         );
     }
 
-    // Task 4.4: Self-invocation сынығын тексеру
+    // Task 4.4: Self-invocation эндпоинты
     @GetMapping("/remove-twice/{id}")
     public String removeTwice(@PathVariable long id) {
         return catalogService.removeTwice(id);
