@@ -1,0 +1,15 @@
+.is-invalid {
+    border: 2px solid red;
+}
+.error {
+    color: red;
+    font-size: 0.85em;
+    display: block;
+}
+.alert {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
