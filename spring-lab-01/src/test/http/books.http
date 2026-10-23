@@ -1,0 +1,22 @@
+### 1. Барлық кітаптарды алу
+GET http://localhost:8080/api/books
+
+### 2. ID бойынша кітапты алу
+GET http://localhost:8080/api/books/1
+
+### 3. Жаңа кітап қосу
+POST http://localhost:8080/api/books
+Content-Type: application/json
+
+{
+  "title": "Clean Code",
+  "author": "Robert Martin",
+  "year": 2008,
+  "genre": "NOVEL"
+}
+
+### 4. Бар емес кітапты іздеу (404 тексеру)
+GET http://localhost:8080/api/books/999
+
+### 5. Кітапты өшіру
+DELETE http://localhost:8080/api/books/1
