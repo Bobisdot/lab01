@@ -2,20 +2,16 @@ package kz.iitu.springlab.web;
 
 import kz.iitu.springlab.domain.Book;
 import kz.iitu.springlab.service.BookService;
-import kz.iitu.springlab.service.BookNotFoundException;
 import kz.iitu.springlab.web.dto.BookMapper;
-import kz.iitu.springlab.web.dto.BookRequest;
 import kz.iitu.springlab.web.dto.BookResponse;
-
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/books")
 public class BookApiController {
 
     private final BookService service;
@@ -26,33 +22,13 @@ public class BookApiController {
         this.mapper = mapper;
     }
 
-    @GetMapping
-    public List<BookResponse> list(@RequestParam(required = false) String author) {
-        return mapper.toResponseList(service.findAll(author));
-    }
+    // 4-тапсырма: беттеу және сұрыптау
+    @GetMapping("/api/books")
+    public Page<BookResponse> list(
+            @RequestParam(required = false) Genre genre,
+            @PageableDefault(size = 5, sort = "title") Pageable pageable) {
 
-    @GetMapping("/{id}")
-    public BookResponse find(@PathVariable long id) {
-        return mapper.toResponse(service.findById(id)
-                .orElseThrow(() -> new BookNotFoundException(id)));
-    }
-
-    @PostMapping
-    public ResponseEntity<BookResponse> create(@Valid @RequestBody BookRequest request) {
-        Book saved = service.create(mapper.toDomain(request));
-        return ResponseEntity
-                .created(URI.create("/api/books/" + saved.getId()))
-                .body(mapper.toResponse(saved));
-    }
-
-    @PutMapping("/{id}")
-    public BookResponse update(@PathVariable long id, @Valid @RequestBody BookRequest request) {
-        return mapper.toResponse(service.update(id, mapper.toDomain(request)));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable long id) {
-        service.delete(id);
-        return ResponseEntity.noContent().build();
+        // Service-тен Page<Book> аламыз, оны Page<BookResponse>-ке айналдырамыз
+        return service.find(genre, pageable).map(mapper::toResponse);
     }
 }
