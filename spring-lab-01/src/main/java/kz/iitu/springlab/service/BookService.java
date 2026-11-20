@@ -5,6 +5,7 @@ import kz.iitu.springlab.domain.BookRepository;
 import kz.iitu.springlab.web.Genre;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional(readOnly = true) // Бұл сессияның ашық болуын қамтамасыз етеді
+@Transactional(readOnly = true)
 public class BookService {
 
     private final BookRepository bookRepository;
@@ -32,7 +33,7 @@ public class BookService {
         return bookRepository.findById(id);
     }
 
-    @Transactional // Сақтау үшін транзакция керек
+    @Transactional
     public Book create(Book book) {
         return bookRepository.save(book);
     }
@@ -47,6 +48,7 @@ public class BookService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(long id) {
         if (!bookRepository.existsById(id)) {
             throw new BookNotFoundException(id);
@@ -54,11 +56,10 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    // === 4-тапсырма үшін жаңа әдіс ===
     public Page<Book> find(Genre genre, Pageable pageable) {
         if (genre == null) {
-            return bookRepository.findAll(pageable); // @EntityGraph қосылған әдіс
+            return bookRepository.findAll(pageable);
         }
-        return bookRepository.findByGenre(genre, pageable); // @EntityGraph қосылған әдіс
+        return bookRepository.findByGenre(genre, pageable);
     }
 }

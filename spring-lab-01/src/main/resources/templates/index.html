@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Басты бет</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="wrap">
+    <header>
+        <h1>Spring Lab</h1>
+        <form th:if="${username != null}" th:action="@{/logout}" method="post" class="inline">
+            <button type="submit">Шығу</button>
+        </form>
+    </header>
+
+    <div class="card" th:if="${username == null}">
+        <h2>Қош келдіңіз</h2>
+        <p>Жалғастыру үшін жүйеге кіріңіз.</p>
+        <a class="btn primary" th:href="@{/login}">Кіру</a>
+    </div>
+
+    <div class="card" th:if="${username != null}">
+        <h2>Сәлем, <span th:text="${username}">user</span>!</h2>
+        <p>Рөлдер:
+            <span class="badge" th:each="r : ${roles}" th:text="${r}">ROLE_USER</span>
+        </p>
+        <nav>
+            <a th:href="@{/books}">Кітаптар</a>
+            <a th:href="@{/api/books}">Кітаптар (API)</a>
+            <a th:if="${isAdmin}" th:href="@{/admin}">Басқару панелі</a>
+        </nav>
+    </div>
+</div>
+</body>
+</html>

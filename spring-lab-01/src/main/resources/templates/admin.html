@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Басқару панелі</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="wrap">
+    <header>
+        <div>
+            <h1>Басқару панелі</h1>
+            <nav><a th:href="@{/}">Басты бет</a> <a th:href="@{/api/books}">Кітаптар (API)</a></nav>
+        </div>
+        <div>
+            <span th:text="${username}">admin</span>
+            <form th:action="@{/logout}" method="post" class="inline">
+                <button type="submit">Шығу</button>
+            </form>
+        </div>
+    </header>
+
+    <div class="msg ok" th:if="${message}" th:text="${message}"></div>
+    <div class="msg err" th:if="${error}" th:text="${error}"></div>
+
+    <div class="card">
+        <h2>Қолданушылар (<span th:text="${#lists.size(users)}">0</span>)</h2>
+        <table>
+            <thead><tr><th>ID</th><th>Логин</th><th>Рөлдері</th><th>Күйі</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="u : ${users}">
+                <td th:text="${u.id}">1</td>
+                <td th:text="${u.username}">user</td>
+                <td><span class="badge" th:each="r : ${u.roles}" th:text="${r}">USER</span></td>
+                <td>
+                    <span th:if="${u.enabled}" class="on">белсенді</span>
+                    <span th:unless="${u.enabled}" class="off">өшірілген</span>
+                </td>
+                <td>
+                    <form th:action="@{/admin/users/{id}/toggle(id=${u.id})}" method="post" class="inline">
+                        <button type="submit" th:text="${u.enabled} ? 'Өшіру' : 'Қосу'">Өшіру</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>Жаңа кітап қосу</h2>
+        <form th:action="@{/admin/books}" method="post" class="grid">
+            <label>Атауы <input name="title" maxlength="120" required></label>
+            <label>Автор <input name="author" required></label>
+            <label>Жылы <input name="year" type="number" min="1450" max="2100" value="2020" required></label>
+            <label>Жанр
+                <select name="genre">
+                    <option th:each="g : ${genres}" th:value="${g}" th:text="${g}">NOVEL</option>
+                </select>
+            </label>
+            <button type="submit" class="primary">Қосу</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Кітаптар (<span th:text="${#lists.size(books)}">0</span>)</h2>
+        <p th:if="${#lists.isEmpty(books)}">Кітаптар әлі жоқ.</p>
+        <table th:unless="${#lists.isEmpty(books)}">
+            <thead><tr><th>ID</th><th>Атауы</th><th>Автор</th><th>Жылы</th><th>Жанр</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="b : ${books}">
+                <td th:text="${b.id}">1</td>
+                <td th:text="${b.title}">Title</td>
+                <td th:text="${b.author.name}">Author</td>
+                <td th:text="${b.year}">2000</td>
+                <td th:text="${b.genre}">NOVEL</td>
+                <td>
+                    <form th:action="@{/admin/books/{id}/delete(id=${b.id})}" method="post" class="inline">
+                        <button type="submit" class="danger">Жою</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
